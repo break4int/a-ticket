@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -49,7 +47,8 @@ public class MainActivity extends Activity {
 		settings.setJavaScriptEnabled(true);
 		settings.setAllowFileAccess(true);
 		settings.setAllowContentAccess(true);
-		
+		settings.setDomStorageEnabled(true);
+
 		String domain = getDomainName("/americano.json");
 		Log.i("", "getDomainName = " + domain);
 		mWebView.loadUrl(domain + "/americano/ticket/index.html");
@@ -119,33 +118,33 @@ public class MainActivity extends Activity {
 			}
 		}
 	}
-	
-	public String getDomainName (String filename) {
+
+	public String getDomainName(String filename) {
 		String ext = Environment.getExternalStorageState();
 		String sdPath = "";
 		String jsonData = null;
-			
-		if(ext.equals(Environment.MEDIA_MOUNTED))
+
+		if (ext.equals(Environment.MEDIA_MOUNTED))
 			sdPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 		else
 			sdPath = Environment.MEDIA_UNMOUNTED;
-			
-	    try{
-	    	StringBuffer bodytext = new StringBuffer();
-	    	FileInputStream fis = new FileInputStream(sdPath + filename);
-	    	BufferedReader bufferReader = new BufferedReader(new InputStreamReader(fis,"UTF-8"));
-	    	String tmp = "";
-	    	while((tmp = bufferReader.readLine())!=null){
-	    		bodytext.append(tmp);
-	    	}
-	    	
-	    	bufferReader.close();
-	    	JSONObject ja = new JSONObject(new String(bodytext));
+
+		try {
+			StringBuffer bodytext = new StringBuffer();
+			FileInputStream fis = new FileInputStream(sdPath + filename);
+			BufferedReader bufferReader = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
+			String tmp = "";
+			while ((tmp = bufferReader.readLine()) != null) {
+				bodytext.append(tmp);
+			}
+
+			bufferReader.close();
+			JSONObject ja = new JSONObject(new String(bodytext));
 			return ja.getString("domain");
-	    }catch(Exception e) {
-	    	e.printStackTrace();
-	    }
-	    
-	    return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }
